@@ -5,11 +5,11 @@ An end-to-end Machine Learning project that classifies raw text messages as SPAM
 
 Core Files Overview
 
->>spam.csv: Raw dataset containing 5,572 tagged SMS/email messages used for model training and testing (86.59% Ham, 13.41% Spam).
->>spam_detection.ipynb: Interactive Jupyter Notebook performing EDA, text preprocessing (cleaning, NLTK stopword removal), TF-IDF feature extraction, N-Gram analysis, model training (MultinomialNB), hyperparameter tuning via GridSearchCV, and interactive ipywidgets GUI testing.
->>spam_model_nb.pkl: Serialized, trained Naïve Bayes classifier ready for deployment and immediate inference.
->>tfidf_vectorizer.pkl: Serialized TF-IDF vectorizer used to transform new incoming raw text messages into the exact feature format expected by spam_model_nb.pkl.
->>spam_predictions_report.csv: Exported output report containing batch testing results, predicted labels, and model confidence percentages.
+*spam.csv: Raw dataset containing 5,572 tagged SMS/email messages used for model training and testing (86.59% Ham, 13.41% Spam).
+*spam_detection.ipynb: Interactive Jupyter Notebook performing EDA, text preprocessing (cleaning, NLTK stopword removal), TF-IDF feature extraction, N-Gram analysis, model training (MultinomialNB), hyperparameter tuning via GridSearchCV, and interactive ipywidgets GUI testing.
+*spam_model_nb.pkl: Serialized, trained Naïve Bayes classifier ready for deployment and immediate inference.
+*tfidf_vectorizer.pkl: Serialized TF-IDF vectorizer used to transform new incoming raw text messages into the exact feature format expected by spam_model_nb.pkl.
+*spam_predictions_report.csv: Exported output report containing batch testing results, predicted labels, and model confidence percentages.
 
 
 Performance Summary
