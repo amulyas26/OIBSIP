@@ -40,70 +40,88 @@ Model Serialization: Saved spam_model_nb.pkl and tfidf_vectorizer.pkl to disk fo
 
 Complete Notebook Code Execution & Output Breakdown
 
-1. Library Imports & Setup
-Code: Imports data manipulation (pandas, numpy), visualization (matplotlib, seaborn), text processing (nltk), and modeling modules (sklearn).
-Outputs: Sets up the execution environment and downloads required NLTK tokenizers and stopword corpora.
+1. Model Evaluation & Performance Metrics
+Code & Action: Loads spam.csv, renames columns to label and message, maps labels to numbers (ham: 0, spam: 1), cleans text using regex, performs an 80/20 train-test split, transforms text with TfidfVectorizer, and trains a MultinomialNB model.
+Output: Achieves a baseline accuracy of 96.59% on the test set.
+<img width="1600" height="764" alt="image" src="https://github.com/user-attachments/assets/9ecfebe6-edc6-4baf-98da-d39fa4afe0d6" />
 
-2. Dataset Ingestion
-Code: Reads spam.csv into a Pandas DataFrame using latin-1 encoding and inspects initial dataset dimensions.
-Outputs: Confirms raw dataset size of 5,572 rows and 5 initial columns (v1 through v5).
+2. Model Comparison & Visualizations
+Code & Action: Trains a LogisticRegression model for comparison, plots a Seaborn confusion matrix heatmap for Naïve Bayes, and defines a custom predict_message() function to test individual input sentences.
+Output: Logistic Regression achieves 97.22% accuracy. The Naïve Bayes confusion matrix reveals 965 True Negatives, 1 False Positive, 37 False Negatives, and 112 True Positives. Custom test inputs correctly identify sample spam (84.45% confidence) and ham (99.63% confidence).
+<img width="1600" height="1585" alt="image" src="https://github.com/user-attachments/assets/266ef497-43c0-4547-a8e7-c91e35b25f99" />
 
-3. Data Cleaning & Renaming
-Code: Drops unused metadata columns (Unnamed: 2, Unnamed: 3, Unnamed: 4) and renames v1 \rightarrow label and v2 \rightarrow message.
-Outputs: Clean DataFrame containing only the core target and text message columns.
+3. Model Serialization & Persistence
+Code & Action: Uses joblib to serialize and save the trained Naïve Bayes classifier (spam_model.pkl) and TF-IDF vectorizer (tfidf_vectorizer.pkl) to disk.
+Output: Exports pipeline .pkl binary files for deployment and future reuse without re-training.
 
-4. Label Encoding
-Code: Maps string class labels into binary numerical values (0 for ham and 1 for spam).
-Outputs: Populates a structured numerical target column required by Scikit-Learn estimators.
-
+4. Interactive User Interface
+Code & Action: Initializes dynamic ipywidgets controls (Textarea, Button, Output) with a button click handler function (on_button_clicked) inside the notebook.
+Output: Renders an interactive text box directly in the notebook allowing users to test custom messages and view real-time predictions with confidence percentages.
 <img width="1600" height="420" alt="image" src="https://github.com/user-attachments/assets/b1e12a7d-bbd9-401c-b443-a88a68f70646" />
 
+5. Feature Importance & Top Predictive Words
+Code & Action: Computes log likelihood ratios from model feature probabilities to isolate top predictive spam keywords (claim, prize, won, urgent, nokia, etc.) and displays a horizontal bar plot alongside overall precision, recall, and F1-score metrics.
+Output: Highlights Precision: 99.12%, Recall: 75.17%, and F1-Score: 85.50% alongside a feature importance visualization.
+<img width="1600" height="935" alt="image" src="https://github.com/user-attachments/assets/95865633-e190-49af-a428-a59887ab9ab8" />
 
-6. Class Distribution Analysis
-Code: Computes absolute counts and percentage distributions for both classes using .value_counts().
-Outputs: Identifies class imbalance: 4,825 Ham (86.59%) vs. 747 Spam (13.41%) messages.
+6. Batch Prediction & Report Export
+Code & Action: Preprocesses a list of unseen sample messages, computes batch predictions and probability confidence scores, constructs a Pandas DataFrame, and saves it to disk via .to_csv().
+Output: Generates a structured prediction output table and exports spam_predictions_report.csv.
+<img width="1600" height="999" alt="image" src="https://github.com/user-attachments/assets/1b4046a2-b89c-4f7e-b759-e8f7ccd581fe" />
 
-7. Text Length Profiling
-Code: Calculates message character lengths, word counts, and sentence counts for ham and spam categories.
-Outputs: Statistical tables demonstrating that spam messages carry higher average word counts and character lengths.
+7. Pipeline Artifacts & Project Summary
+Code & Action: Uses joblib to serialize and save the model (spam_model_nb.pkl) and vectorizer (tfidf_vectorizer.pkl), prints the saved asset file sizes in KB, reloads them to run a sanity check prediction on a sample query ("URGENT! Your mobile number has won..."), and prints a project completion checklist.
+Output: Saved spam_model_nb.pkl (94.52 KB) and tfidf_vectorizer.pkl (105.02 KB). Sanity check reload successfully predicted the sample test query as SPAM (99.09% confidence).
+<img width="1600" height="1014" alt="image" src="https://github.com/user-attachments/assets/3bda0826-b503-47a4-8b80-28be82b5eca8" />
 
-8. Visual Exploratory Analysis
-Code: Plots class distribution bar charts, message length histograms, and generates WordClouds for each class.
-Outputs: Visual confirmation of prominent spam terms (e.g., "call", "free", "claim", "txt") versus standard conversational ham vocabulary.
+8. Advanced Feature Engineering: N-Gram Analysis
+Code & Action: Initializes TfidfVectorizer with ngram_range=(1, 2) (capturing both unigrams and bigrams) limited to max_features=3000. Fits and transforms the dataset, then trains a new MultinomialNB model.
+Output: Achieves an N-Gram Model Accuracy of 96.95%.
+<img width="1496" height="266" alt="image" src="https://github.com/user-attachments/assets/aae1ed4d-bda3-4ecb-8c5a-3c980cc38a37" />
 
-9. Custom Text Preprocessing
-Code: Defines a cleaning pipeline to lowercase text, strip punctuation and special characters, tokenize words, and eliminate NLTK English stopwords.
-Outputs: Generates a sanitized clean_message column free of noise and non-informative words.
+9. Text Preprocessing with NLTK
+Code & Action: Imports NLTK and downloads the standard English stopwords corpus to filter out low-value stop words.
+<img width="1496" height="266" alt="image" src="https://github.com/user-attachments/assets/5110c473-e913-4810-960c-ebb7d95d1c89" />
 
-10. Stratified Train-Test Split
-Code: Executes train_test_split with stratify=y and random_state=42 to create an 80/20 train-test partition.
-Outputs: Splits dataset into 4,457 training samples and 1,115 test samples while preserving target class proportions.
+10. Dataset Class Distribution Analysis
+Code & Action: Evaluates the class imbalance in the dataset using .value_counts(). Defines clean_text_with_stopwords() to apply lowercasing, regex stripping, and NLTK stop-word removal across df['message'].
+Output: Reveals a dataset distribution of 4,825 Ham (86.59%) and 747 Spam (13.41%) messages.
+<img width="1600" height="857" alt="image" src="https://github.com/user-attachments/assets/7204ffcd-f673-45cb-9c07-cfd30626d0fa" />
 
-11. TF-IDF & N-Gram Feature Extraction
-Code: Fits TfidfVectorizer with ngram_range=(1, 2) on training data and transforms test data.
-Outputs: High-dimensional sparse feature matrix capturing both individual terms and key contiguous word pairs (e.g., "claim now", "free msg").
+11. Exploratory Data Analysis: Word Clouds
+Code & Action: Generates comparative WordCloud visual representations for both classes. Joins cleaned spam messages into spam_text (black background) and ham messages into ham_text (white background), displaying them side-by-side using matplotlib.
+Output: Renders word clouds illustrating high-frequency spam terms (free, text, txt, mobile, call, claim) versus ham terms (ok, come, dont, like, home).
+<img width="1599" height="472" alt="image" src="https://github.com/user-attachments/assets/47c0f1b8-aa41-4b4a-9b69-1a4751af3e40" />
 
-12. Baseline Naïve Bayes Fitting
-Code: Trains a default MultinomialNB classifier on the TF-IDF feature matrix and evaluates test set predictions.
-Outputs: Initial baseline model accuracy of 96.95%.
 
-13. Hyperparameter Tuning (GridSearchCV)
-Code: Runs GridSearchCV across Laplace smoothing parameters (alpha: [0.1, 0.5, 1.0, 2.0]) using 5-fold cross-validation targeting F1-Score.
-Outputs: Selects optimal parameter {'alpha': 0.1} yielding a peak Cross-Validation F1-Score of 94.15%.
+Additional Implementation
 
-14. Cross-Validation & Stability Evaluation
-Code: Evaluates 5-fold cross_val_score across the dataset using the tuned Naïve Bayes estimator.
-Outputs: Mean 5-Fold Cross-Validation Accuracy of 96.84% (\pm 0.78\%), confirming stability across different data folds.
+12. Model Validation: K-Folds Cross Validation
+Code & Action: Imports cross_val_score from sklearn.model_selection and runs a 5-fold cross-validation on the TF-IDF Naïve Bayes model across X_train_tfidf and y_train.
+Output: Yields fold accuracies of [0.9742, 0.9619, 0.9787, 0.9574, 0.9697], resulting in a Mean CV Accuracy of 96.84% (± 0.78%).
+<img width="1600" height="324" alt="image" src="https://github.com/user-attachments/assets/d74fa68f-5cbb-4953-bdc6-b9619a5662db" />
 
-15. ROC Curve & AUC Score Calculation
-Code: Computes prediction probabilities, generates the Receiver Operating Characteristic (ROC) curve using roc_curve, and computes roc_auc_score.
-Outputs: ROC-AUC Score of 0.9789, showing class separation capability across probability thresholds.
+13. Performance Evaluation: ROC Curve & AUC Score
+Code & Action: Calculates predicted probability estimates (model.predict_proba) for the test set, computes roc_curve false-positive and true-positive rates, plots the ROC curve against a random-guess baseline using plt.plot(), and calculates the overall Area Under the Curve (roc_auc_score).
+<img width="1600" height="764" alt="image" src="https://github.com/user-attachments/assets/568f4678-29f7-4299-9296-acf95cc72d97" />
 
-16. Misclassification Inspection & Interactive UI
-Code: Isolates False Positives and False Negatives, exports prediction outputs to spam_predictions_report.csv, serializes model files (.pkl), and sets up dynamic ipywidgets UI controls.
-Outputs:
-Error Breakdown: 1 False Positive and 37 False Negatives.
-Interactive text input widget providing real-time spam predictions and confidence percentages.
+14. Hyperparameter Tuning: GridSearchCV
+Code & Action: Imports GridSearchCV from sklearn.model_selection to optimize the Naïve Bayes smoothing parameter (alpha tested across [0.1, 0.5, 1.0, 2.0]) using 5-fold cross-validation.
+Output Results:
+Best Alpha Parameter: {'alpha': 0.1}
+Best CV F1-Score: 94.15%
+<img width="1600" height="324" alt="image" src="https://github.com/user-attachments/assets/91db1653-7c8a-4ce8-9e74-84cbd22ab382" />
+
+15. Error Analysis: False Positives & False Negatives
+Code & Action: Constructs a Pandas DataFrame (test_analysis) pairing original test messages (X_test), actual labels (y_test), and predicted values (y_pred). Filters for misclassified instances to isolate False Positives (Actual: 0, Predicted: 1) and False Negatives (Actual: 1, Predicted: 0), displaying sample rows via .head(3).
+Output Results:
+Total False Positives (Ham flagged as Spam): 1
+Sample: "nokia phone is lovly" (Triggered by the strong spam indicator keyword nokia).
+Total False Negatives (Spam missed by filter): 37
+Samples:
+"you are now unsubscribed all services get tons..."
+"freemsg hey there darling its been weeks now ..."
+<img width="1600" height="1031" alt="image" src="https://github.com/user-attachments/assets/155ee534-8106-4dff-b590-a67e5af1653d" />
 
 
 Conclusion
