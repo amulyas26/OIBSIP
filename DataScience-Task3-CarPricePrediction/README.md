@@ -40,12 +40,12 @@ Step-by-step process of entire Car_price_prediction task
 1. Data Ingestion & Setup
 Code: Imports pandas, numpy, matplotlib, seaborn, and datetime. Reads raw data via df = pd.read_csv('car data.csv') and inspects initial rows with df.head().
 Output: Displays original vehicle attributes including brand, purchase year, target Selling_Price, Present_Price, Kms_Driven, and categorical features.
-<img width="399" height="224" alt="image" src="https://github.com/user-attachments/assets/dc7e2343-7ed3-4d4e-99c0-09cf5c75a104" />
+<img width="399" height="224" alt="image" src="https://github.com/user-attachments/assets/7e2aa43d-2d5f-4e4a-bd74-2f1c4d29790f" />
 
 2. Data Cleaning & Feature Engineering
 Code: Validates dataset integrity using df.isnull().sum(). Computes vehicle age via Car_Age = current_year - df['Year'], drops redundant columns (Car_Name, Year), and encodes categorical variables into binary columns using pd.get_dummies(..., drop_first=True).
 Output: Confirms zero missing values and outputs a clean, all-numeric DataFrame ready for modeling.
-<img width="399" height="224" alt="image" src="https://github.com/user-attachments/assets/8b162866-0a5b-4b8a-b85e-d542fcaa762c" />
+<img width="399" height="224" alt="image" src="https://github.com/user-attachments/assets/bd487d6d-fcdb-495a-8dec-96f613493f2c" />
 
 3. Model Training & Evaluation
 Code: Separates predictors (X) from the target (y), splits data using train_test_split() (80\% train, 20\% test), fits a RandomForestRegressor(), and evaluates performance using R^2 score and MAE metrics.
